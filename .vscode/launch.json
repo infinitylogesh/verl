@@ -1,0 +1,112 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: math_12k_srt.py (with args)",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/examples/data_preprocess/math_12k_srt.py",
+      "args": [
+        "--local_dir",
+        "${env:HOME}/data/math_12k_test",
+        "--add_self_consistency_labels",
+        "--stage_splits=30,40,30",
+        "--stage_noises=0.0,1.0,1.0",  
+        "--dataset_path=hiyouga/math12k"
+      ],
+      "cwd": "${workspaceFolder}/examples/data_preprocess",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      // "python": "${workspaceFolder}/sympy_env/bin/python"
+    },
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "justMyCode": true,
+      // "python": "${workspaceFolder}/sympy_env/bin/python"
+    },
+    {
+      "name": "Train PPO (verl) - GSM8K",
+      "type": "python",
+      "request": "launch",
+      "module": "verl.trainer.main_ppo",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${workspaceFolder}",
+      "subProcess": true,
+      "args": [
+        "algorithm.adv_estimator=grpo",
+        "trainer.val_before_train=False",
+        "data.train_files=${workspaceFolder}/examples/data_preprocess/data/math_12k/stage_1/train.parquet",
+        "data.val_files=${workspaceFolder}/examples/data_preprocess/data/math_12k/stage_1/test.parquet",
+        "data.train_batch_size=16",
+        "data.max_prompt_length=512",
+        "data.max_response_length=1024",
+        "data.filter_overlong_prompts=True",
+        "data.truncation='error'",
+        "data.shuffle=False",
+        "actor_rollout_ref.model.path=Qwen/Qwen3-4B-Instruct-2507 ",
+        "actor_rollout_ref.model.lora_rank=64",
+        "actor_rollout_ref.model.lora_alpha=32",
+        "actor_rollout_ref.actor.optim.lr=3e-6",
+        "actor_rollout_ref.model.use_remove_padding=True",
+        "actor_rollout_ref.actor.ppo_mini_batch_size=16",
+        "actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=40",
+        "actor_rollout_ref.actor.use_kl_loss=True",
+        "actor_rollout_ref.actor.kl_loss_coef=0.001",
+        "actor_rollout_ref.actor.kl_loss_type=low_var_kl",
+        "actor_rollout_ref.actor.entropy_coeff=0",
+        "actor_rollout_ref.model.enable_gradient_checkpointing=True",
+        "actor_rollout_ref.actor.fsdp_config.param_offload=False",
+        "actor_rollout_ref.actor.fsdp_config.optimizer_offload=False",
+        "actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=40",
+        "actor_rollout_ref.rollout.tensor_model_parallel_size=1",
+        "actor_rollout_ref.rollout.name=vllm",
+        "actor_rollout_ref.rollout.gpu_memory_utilization=0.6",
+        "actor_rollout_ref.rollout.n=5",
+        "actor_rollout_ref.rollout.load_format=safetensors",
+        "actor_rollout_ref.rollout.layered_summon=True",
+        "actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=40",
+        "actor_rollout_ref.ref.fsdp_config.param_offload=True",
+        "algorithm.use_kl_in_reward=False",
+        "reward_model.reward_manager=self_learning",
+        "reward_model.reward_kwargs.self_consistency_threshold=0.0",
+        "reward_model.reward_kwargs.soft_reward=False",
+        "reward_model.reward_kwargs.remove_kl_loss_from_unlabeled_examples=True",
+        "reward_model.reward_kwargs.oversampling_keep_fraction=1.0",
+        "trainer.critic_warmup=0",
+        // "trainer.logger='[\\\"console\\\",\\\"wandb\\\"]'",
+        "trainer.project_name='verl_grpo_example_gsm8k'",
+        "trainer.experiment_name='qwen2.5_0.5b_grpo_lora'",
+        "trainer.n_gpus_per_node=1",
+        "trainer.nnodes=1",
+        "trainer.save_freq=20",
+        "trainer.test_freq=5",
+        "trainer.total_epochs=15",
+        "+ray_kwargs.ray_init.local_mode=True" // set to True to run in local mode for debugging
+        // "${input:extraArgs}"
+      ],
+      "env": {
+        "WORLD_SIZE": "1",
+        "RANK": "0",
+        "LOCAL_WORLD_SIZE": "1",
+        "LOCAL_RANK": "0",
+        "MASTER_ADDR": "127.0.0.1",
+        "MASTER_PORT": "29500"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "extraArgs",
+      "type": "promptString",
+      "description": "Optional extra CLI args to append (leave empty for none)",
+      "default": ""
+    }
+  ]
+}
+
