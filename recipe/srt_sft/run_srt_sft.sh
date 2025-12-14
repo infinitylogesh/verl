@@ -1,0 +1,11 @@
+python3 recipe/srt_sft/train.py \
+    --model_name_or_path Qwen/Qwen3-0.6B \
+    --train_file data/train.json \
+    --validation_file data/test.json \
+    --per_device_train_batch_size 1 \
+    --per_device_eval_batch_size 1 \
+    --num_train_epochs 1 \
+    --output_dir output \
+    --logging_steps 10 \
+    --save_steps 10 \
+    --save_total_limit 1

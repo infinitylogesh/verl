@@ -111,3 +111,8 @@ verl = [
   "trainer/config/*.yaml",
   "trainer/config/*/*.yaml",
 ]
+
+[tool.uv.workspace]
+members = [
+    "recipe/srt_sft",
+]
