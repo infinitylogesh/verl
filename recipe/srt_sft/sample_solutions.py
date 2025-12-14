@@ -9,7 +9,7 @@ import asyncio
 
 client = AsyncOpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key=os.getenv("OPENROUTER_API_KEY","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"),
+    api_key=os.getenv("OPENROUTER_API_KEY"),
     )
 
 SYSTEM_PROMPT = """
