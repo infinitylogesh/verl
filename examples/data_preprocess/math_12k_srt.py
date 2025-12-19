@@ -19,9 +19,10 @@ to be used for self-rewarding training (SRT).
 """
 
 import os
-import datasets
+import datasets 
 import numpy as np
-from verl.utils.hdfs_io import copy, makedirs
+import sys
+from hdfs_io import copy, makedirs
 import argparse
 from sympy.parsing.latex import parse_latex
 
@@ -67,6 +68,7 @@ if __name__ == '__main__':
 
     def is_latex_expression(solution):
         return "\\" in solution
+
     # add a row to each data item that represents a unique id
     def make_map_fn_train(split, label_noise):
 

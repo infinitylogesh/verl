@@ -115,4 +115,6 @@ verl = [
 [tool.uv.workspace]
 members = [
     "recipe/srt_sft",
+    "examples/data_preprocess",
+    "recipe/srt_eval",
 ]

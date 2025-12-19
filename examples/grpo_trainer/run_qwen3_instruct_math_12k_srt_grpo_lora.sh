@@ -17,7 +17,7 @@ export LEARNING_RATE=1e-6
 export KL_COEFF=0.001
 
 # Model path and lora rank and alpha
-export MODEL_PATH=Qwen/Qwen3-1.7B
+export MODEL_PATH=infinitylogesh/Qwen3-1.7B-GRPO-SRT-Math-12k-Stage-1
 export LORA_RANK=64
 export LORA_ALPHA=32
 
@@ -29,8 +29,8 @@ export SELF_CONSISTENCY_THRESHOLD=0.0
 export SOFT_REWARD=False
 export REMOVE_KL_LOSS_FROM_UNLABELLED_EXAMPLES=True
 export OVERSAMPLING_KEEP_FRACTION=1.0
-export TRAIN_FILE=examples/data_preprocess/data/math_12k/stage_0/train.parquet
-export VAL_FILE=examples/data_preprocess/data/math_12k/stage_0/test.parquet
+export TRAIN_FILE=examples/data_preprocess/data/math_12k/stage_2/train.parquet
+export VAL_FILE=examples/data_preprocess/data/math_12k/stage_2/test.parquet
 
 python3 -m verl.trainer.main_ppo \
     algorithm.adv_estimator=grpo \
@@ -81,7 +81,7 @@ python3 -m verl.trainer.main_ppo \
     trainer.critic_warmup=0 \
     trainer.logger='["console","wandb"]' \
     trainer.project_name='verl_grpo_example_gsm8k' \
-    trainer.experiment_name='qwen3_1_7b_srt_grpo_math_12k_stage_0_lora_rollout_32_lora_64_32' \
+    trainer.experiment_name='qwen3_1_7b_srt_grpo_math_12k_stage_2_lora_rollout_32_lora_64_32' \
     trainer.n_gpus_per_node=1 \
     trainer.nnodes=1 \
     trainer.save_freq=50 \
