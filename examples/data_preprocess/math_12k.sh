@@ -1,7 +1,7 @@
 set -x
 
-stage_splits="30,40,30"
-stage_noises="0.0,1.0,1.0"
+stage_splits="100"
+stage_noises="1.0"
 
 python3 examples/data_preprocess/math_12k_srt.py \
     --local_dir ./data/math_12k \

@@ -1,12 +1,12 @@
 set -x
 
-export FULL_BATCH_SIZE=16
-export PPO_MINI_BATCH_SIZE=16
-export PER_GPU_MINI_BATCH_SIZE=16
+export FULL_BATCH_SIZE=96
+export PPO_MINI_BATCH_SIZE=96
+export PER_GPU_MINI_BATCH_SIZE=24
 
 # Number of rollouts
-export NUM_PER_PROMPT_ROLLOUTS=32
-export NUM_PER_PROMPT_ROLLOUTS_VALIDATION=32
+export NUM_PER_PROMPT_ROLLOUTS=16
+export NUM_PER_PROMPT_ROLLOUTS_VALIDATION=16
 
 # prompt and response length cutoff
 export MAX_RESPONSE_LENGTH=2048
@@ -17,9 +17,9 @@ export LEARNING_RATE=1e-6
 export KL_COEFF=0.001
 
 # Model path and lora rank and alpha
-export MODEL_PATH=infinitylogesh/Qwen3-1.7B-GRPO-SRT-Math-12k-Stage-1
-export LORA_RANK=64
-export LORA_ALPHA=32
+export MODEL_PATH=Qwen/Qwen3-1.7B
+# export LORA_RANK=64
+# export LORA_ALPHA=32
 
 # SRT hyperparams
 # These are the ones that different between SRT and RL with ground truth
@@ -29,8 +29,8 @@ export SELF_CONSISTENCY_THRESHOLD=0.0
 export SOFT_REWARD=False
 export REMOVE_KL_LOSS_FROM_UNLABELLED_EXAMPLES=True
 export OVERSAMPLING_KEEP_FRACTION=1.0
-export TRAIN_FILE=examples/data_preprocess/data/math_12k/stage_2/train.parquet
-export VAL_FILE=examples/data_preprocess/data/math_12k/stage_2/test.parquet
+export TRAIN_FILE=data/math_12k/stage_0/train.parquet
+export VAL_FILE=data/math_12k/stage_0/test.parquet
 
 python3 -m verl.trainer.main_ppo \
     algorithm.adv_estimator=grpo \
@@ -44,8 +44,6 @@ python3 -m verl.trainer.main_ppo \
     data.truncation='error' \
     data.shuffle=False \
     actor_rollout_ref.model.path=$MODEL_PATH \
-    actor_rollout_ref.model.lora_rank=$LORA_RANK \
-    actor_rollout_ref.model.lora_alpha=$LORA_ALPHA \
     actor_rollout_ref.actor.optim.lr=$LEARNING_RATE \
     actor_rollout_ref.model.use_remove_padding=True \
     actor_rollout_ref.actor.ppo_mini_batch_size=$PPO_MINI_BATCH_SIZE \
@@ -81,8 +79,8 @@ python3 -m verl.trainer.main_ppo \
     trainer.critic_warmup=0 \
     trainer.logger='["console","wandb"]' \
     trainer.project_name='verl_grpo_example_gsm8k' \
-    trainer.experiment_name='qwen3_1_7b_srt_grpo_math_12k_stage_2_lora_rollout_32_lora_64_32' \
-    trainer.n_gpus_per_node=1 \
+    trainer.experiment_name='qwen3_1_7b_srt_grpo_math_12k_single_stage_rollout_16_fullfinetuning' \
+    trainer.n_gpus_per_node=4 \
     trainer.nnodes=1 \
     trainer.save_freq=50 \
     trainer.test_freq=50 \
